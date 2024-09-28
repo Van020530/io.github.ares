@@ -1,0 +1,37 @@
+version: "1"
+
+package:
+  id: io.github.ares
+  name: ares
+  version: 140.0.0.0
+  kind: app
+  description: |
+    ares is a cross-platform, open source, multi-system emulator, focusing on accuracy and preservation.
+
+base: org.deepin.foundation/23.0.0
+runtime: org.deepin.Runtime/23.0.1
+
+command:
+  - /opt/apps/io.github.ares/files/bin/ares
+
+sources:
+  - kind: git
+    url: https://github.com/ares-emulator/ares.git
+    version: master
+    commit: f43da416fdc55a515bf5c0780f91c78c72dc1101
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/p/pulseaudio/libpulse0_15.0.3-5deepin10_amd64.deb
+    digest: b937c4a8c158747b9decfb280749f27f97a3201d0e439c1d20f0368002b3212a
+
+  - kind: file
+    url: https://community-packages.deepin.com/beige/pool/main/p/pulseaudio/libpulse-dev_15.0.3-5deepin10_amd64.deb
+    digest: 2acd8cec3c6dcd56fb61076ceb09c16345501a42fedf38019ff9530d645e89c1
+
+build: |
+  echo "" > $PREFIX/packages.list
+  bash ./install_dep linglong/sources "$PREFIX"
+  
+  cd /project/linglong/sources/ares.git
+  make librashader=false
+  make install prefix=${PREFIX}
